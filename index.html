@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Borrower Loan Portal</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary: #2563eb;
+        --secondary: #0f172a;
+        --bg: #f1f5f9;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        background: var(--bg);
+      }
+
+      /* ===== TOOLBAR ===== */
+      .toolbar {
+        height: 50px;
+        background: linear-gradient(135deg, #1e3a8a, #2563eb);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* 🔥 LEFT & RIGHT */
+        padding: 0 16px;
+        font-size: 18px;
+        font-weight: 600;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+      }
+
+      .toolbar-title {
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .toolbar-contact {
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 0.9;
+        cursor: pointer;
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        height: 35px;
+        background: linear-gradient(135deg, #1e3a8a, #2563eb);
+        color: #cbd5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+
+      /* ===== CONTENT ===== */
+      .content {
+        flex: 1;
+        margin-top: 56px;
+        margin-bottom: 44px;
+        overflow-y: auto;
+        padding: 16px;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+        animation: fadeSlide 0.6s ease;
+      }
+
+      @keyframes fadeSlide {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h2,
+      h3 {
+        margin: 0 0 10px;
+        color: var(--secondary);
+      }
+
+      .subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 16px;
+      }
+
+      input {
+        width: 100%;
+        padding: 14px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        border: 1px solid #cbd5f5;
+        font-size: 15px;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+
+      button {
+        width: 100%;
+        padding: 14px;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        opacity: 0.7;
+      }
+
+      /* ===== DASHBOARD ===== */
+      .dashboard {
+        display: none;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+
+      .stat {
+        padding: 16px;
+        border-radius: 14px;
+        color: #fff;
+      }
+
+      .stat.primary {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      }
+
+      .stat.warning {
+        background: linear-gradient(135deg, #facc15, #f59e0b);
+        color: #78350f;
+      }
+
+      .stat span {
+        font-size: 12px;
+      }
+
+      .stat strong {
+        font-size: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        font-size: 13px;
+        text-align: left;
+      }
+
+      th {
+        background: #f8fafc;
+      }
+
+      tr:nth-child(even) {
+        background: #f9fafb;
+      }
+
+      .badge {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .paid {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .partial {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      .table-scroll {
+        max-height: 260px; /* Controls visible height */
+        overflow-y: auto;
+        border-radius: 12px;
+        box-shadow: inset 0 0 0 1px #e5e7eb;
+      }
+
+      /* Smooth scrolling on mobile */
+      .table-scroll {
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Keep header visible while scrolling */
+      .table-scroll thead th {
+        position: sticky;
+        top: 0;
+        background: #f8fafc;
+        z-index: 1;
+      }
+
+      @media (max-width: 480px) {
+        .table-scroll {
+          max-height: 200px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="toolbar">
+      <span class="toolbar-title">Borrower Portal</span>
+      <span class="toolbar-contact">Admin #: +639924674726</span>
+    </header>
+
+    <main class="content">
+      <!-- LOGIN -->
+      <section id="borrowerForm" class="card">
+        <h2>Check Loan Details</h2>
+        <p class="subtitle">Secure • Read-only access</p>
+
+        <input type="text" id="nameInput" placeholder="Full Name" />
+        <input type="text" id="contactInput" placeholder="Mobile Number" />
+        <button id="checkLoan">Check Loan</button>
+      </section>
+
+      <!-- DASHBOARD -->
+      <section id="result" class="dashboard">
+        <h3>Borrower Dashboard</h3>
+
+        <div class="stats">
+          <div class="stat primary">
+            <span>Loan Amount</span>
+            <strong>₱<span id="rLoanAmount"></span></strong>
+          </div>
+
+          <div class="stat warning">
+            <span>Outstanding</span>
+            <strong>₱<span id="rBalance"></span></strong>
+          </div>
+        </div>
+
+        <div class="card">
+          <p><strong>Name:</strong> <span id="rName"></span></p>
+          <p><strong>Mobile:</strong> <span id="rContact"></span></p>
+          <p>
+            <strong>Status:</strong>
+            <span id="rStatus" class="badge"></span>
+          </p>
+        </div>
+
+        <h3>Payment History</h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody id="paymentTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">© 2025 Lending Management System</footer>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        get,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+      /* ==================== FIREBASE CONFIG ==================== */
+      const firebaseConfig = {
+        apiKey: "AIzaSyBD1Kdqv91DSydBjTANn4mAUIw2CsAQvHI",
+        authDomain: "lending-management-bb242.firebaseapp.com",
+        databaseURL:
+          "https://lending-management-bb242-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "lending-management-bb242",
+        storageBucket: "lending-management-bb242.appspot.com",
+        messagingSenderId: "835612670104",
+        appId: "1:835612670104:web:551a3e9f81031e98a238ed",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      /* ==================== DOM ELEMENTS ==================== */
+      const checkBtn = document.getElementById("checkLoan");
+      const nameInput = document.getElementById("nameInput");
+      const contactInput = document.getElementById("contactInput");
+      const resultBox = document.getElementById("result");
+
+      const rName = document.getElementById("rName");
+      const rContact = document.getElementById("rContact");
+      const rLoanAmount = document.getElementById("rLoanAmount");
+      const rBalance = document.getElementById("rBalance");
+      const rStatus = document.getElementById("rStatus");
+      const paymentTable = document.getElementById("paymentTable");
+
+      const borrowerForm = document.getElementById("borrowerForm");
+
+      /* ==================== EVENT ==================== */
+      checkBtn.addEventListener("click", fetchBorrowerLoan);
+
+      /* ==================== MAIN FUNCTION ==================== */
+      async function fetchBorrowerLoan() {
+        const name = nameInput.value.trim().toLowerCase();
+        const contact = contactInput.value.trim();
+
+        if (!name || !contact) {
+          showMessage("Please enter your full name and mobile number.");
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const borrowersSnap = await get(ref(db, "lendingSystem/borrowers"));
+          let borrowerFound = null;
+
+          borrowersSnap.forEach((child) => {
+            const b = child.val();
+            if (b.name?.toLowerCase() === name && b.contact === contact) {
+              borrowerFound = { id: child.key, ...b };
+            }
+          });
+
+          if (!borrowerFound) {
+            showMessage("No matching loan record found.");
+            resetResult();
+            return;
+          }
+
+          renderBorrowerInfo(borrowerFound);
+          await renderPaymentHistory(borrowerFound.id);
+        } catch (err) {
+          console.error(err);
+          showMessage("Unable to load loan data. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      /* ==================== RENDER FUNCTIONS ==================== */
+      function renderBorrowerInfo(b) {
+        borrowerForm.classList.add("hide"); // 🔥 Hide input
+        resultBox.style.display = "block"; // 🔥 Show dashboard
+
+        rName.textContent = b.name;
+        rContact.textContent = b.contact;
+        rLoanAmount.textContent = Number(b.amount).toFixed(2);
+
+        const balance = (b.outstanding - b.partial).toFixed(2);
+        rBalance.textContent = balance;
+
+        rStatus.textContent = b.status;
+        rStatus.className =
+          "badge " + (b.status === "Paid" ? "paid" : "partial");
+      }
+
+      async function renderPaymentHistory(borrowerId) {
+        const paymentsSnap = await get(ref(db, "lendingSystem/payments"));
+        paymentTable.innerHTML = "";
+
+        let hasPayments = false;
+
+        paymentsSnap.forEach((p) => {
+          const pay = p.val();
+          if (pay.borrowerId === borrowerId) {
+            hasPayments = true;
+            paymentTable.innerHTML += `
+        <tr>
+          <td>${pay.date}</td>
+          <td>${capitalize(pay.type)}</td>
+          <td>₱${Number(pay.amount).toFixed(2)}</td>
+        </tr>
+      `;
+          }
+        });
+
+        if (!hasPayments) {
+          paymentTable.innerHTML = `
+      <tr>
+        <td colspan="3" style="text-align:center;color:#64748b;">
+          No payment history found
+        </td>
+      </tr>
+    `;
+        }
+      }
+
+      /* ==================== UI HELPERS ==================== */
+      function setLoading(isLoading) {
+        checkBtn.disabled = isLoading;
+        checkBtn.textContent = isLoading ? "Checking..." : "Check Loan Details";
+      }
+
+      function showMessage(msg) {
+        alert(msg); // You can replace this later with a toast/snackbar
+      }
+
+      function resetResult() {
+        resultBox.style.display = "none";
+        paymentTable.innerHTML = "";
+      }
+
+      /* ==================== UTIL ==================== */
+      function capitalize(str) {
+        return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
+      }
+    </script>
+  </body>
+</html>
