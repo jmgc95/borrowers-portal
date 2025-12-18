@@ -413,36 +413,54 @@
           "badge " + (b.status === "Paid" ? "paid" : "partial");
       }
 
-      async function renderPaymentHistory(borrowerId) {
-        const paymentsSnap = await get(ref(db, "lendingSystem/payments"));
-        paymentTable.innerHTML = "";
+function formatDate(timestamp) {
+  const d = new Date(Number(timestamp));
 
-        let hasPayments = false;
+  return d.toLocaleString('en-PH', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+}
+      
+     async function renderPaymentHistory(borrowerId) {
+  const paymentsSnap = await get(ref(db, "lendingSystem/payments"));
+  paymentTable.innerHTML = "";
 
-        paymentsSnap.forEach((p) => {
-          const pay = p.val();
-          if (pay.borrowerId === borrowerId) {
-            hasPayments = true;
-            paymentTable.innerHTML += `
-        <tr>
-          <td>${pay.date}</td>
-          <td>${capitalize(pay.type)}</td>
-          <td>₱${Number(pay.amount).toFixed(2)}</td>
-        </tr>
-      `;
-          }
-        });
+  let paymentList = [];
 
-        if (!hasPayments) {
-          paymentTable.innerHTML = `
+  paymentsSnap.forEach((p) => {
+    const pay = p.val();
+    if (pay.borrowerId === borrowerId) {
+      paymentList.push(pay);
+    }
+  });
+
+  if (paymentList.length === 0) {
+    paymentTable.innerHTML = `
       <tr>
         <td colspan="3" style="text-align:center;color:#64748b;">
           No payment history found
         </td>
       </tr>
     `;
-        }
-      }
+    return;
+  }
+
+  // 🔥 Newest payments first (same as admin)
+  paymentList.reverse().forEach((pay) => {
+    paymentTable.innerHTML += `
+      <tr>
+        <td>${formatDate(pay.date)}</td>
+        <td>${capitalize(pay.type)}</td>
+        <td>₱${Number(pay.amount).toFixed(2)}</td>
+      </tr>
+    `;
+  });
+}
 
       /* ==================== UI HELPERS ==================== */
       function setLoading(isLoading) {
