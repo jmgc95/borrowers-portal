@@ -253,6 +253,116 @@
           max-height: 200px;
         }
       }
+
+      /* ===== FINTECH DASHBOARD ===== */
+      .fintech {
+        display: none;
+      }
+
+      .hero-card {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #fff;
+        border-radius: 20px;
+        padding: 22px;
+        margin-bottom: 18px;
+      }
+
+      .hero-label {
+        font-size: 13px;
+        opacity: 0.9;
+      }
+
+      .hero-amount {
+        font-size: 34px;
+        font-weight: 700;
+        margin: 6px 0;
+      }
+
+      .hero-sub {
+        font-size: 13px;
+        opacity: 0.85;
+      }
+
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .kpi-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      }
+
+      .kpi-label {
+        font-size: 12px;
+        color: #64748b;
+      }
+
+      .kpi-value {
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .profile-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 14px;
+        margin-bottom: 16px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      }
+
+      .profile-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+      }
+
+      .history-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      }
+
+      .payment-list {
+        margin-top: 12px;
+      }
+
+      .payment-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .payment-item:last-child {
+        border-bottom: none;
+      }
+
+      .payment-type {
+        font-weight: 600;
+      }
+
+      .payment-date {
+        font-size: 12px;
+        color: #64748b;
+      }
+
+      .payment-amount {
+        font-weight: 700;
+        color: #2563eb;
+      }
+
+      .empty-state {
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+        padding: 20px;
+      }
     </style>
   </head>
 
@@ -274,42 +384,41 @@
       </section>
 
       <!-- DASHBOARD -->
-      <section id="result" class="dashboard">
-        <h3>Borrower Dashboard</h3>
-
-        <div class="stats">
-          <div class="stat primary">
-            <span>Loan Amount</span>
-            <strong>₱<span id="rLoanAmount"></span></strong>
-          </div>
-
-          <div class="stat warning">
-            <span>Outstanding</span>
-            <strong>₱<span id="rBalance"></span></strong>
+      <section id="result" class="dashboard fintech">
+        <!-- HERO BALANCE CARD -->
+        <div class="hero-card">
+          <div class="hero-label">Outstanding Balance</div>
+          <div class="hero-amount">₱<span id="rBalance"></span></div>
+          <div class="hero-sub">
+            Loan Amount: ₱<span id="rLoanAmount"></span>
           </div>
         </div>
 
-        <div class="card">
-          <p><strong>Name:</strong> <span id="rName"></span></p>
-          <p><strong>Mobile:</strong> <span id="rContact"></span></p>
-          <p>
-            <strong>Status:</strong>
+        <!-- KPI CARDS -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Status</span>
             <span id="rStatus" class="badge"></span>
-          </p>
+          </div>
+
+          <div class="kpi-card">
+            <span class="kpi-label">Borrower</span>
+            <span class="kpi-value" id="rName"></span>
+          </div>
         </div>
 
-        <h3>Payment History</h3>
-        <div class="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody id="paymentTable"></tbody>
-          </table>
+        <!-- PROFILE CARD -->
+        <div class="profile-card">
+          <div class="profile-row">
+            <span>Mobile</span>
+            <strong id="rContact"></strong>
+          </div>
+        </div>
+
+        <!-- PAYMENT HISTORY -->
+        <div class="history-card">
+          <h3>Payment History</h3>
+          <div id="paymentTable" class="payment-list"></div>
         </div>
       </section>
     </main>
@@ -386,6 +495,16 @@
             return;
           }
 
+          // ✅ Save login info locally
+          localStorage.setItem(
+            "borrowerLogin",
+            JSON.stringify({
+              name: borrowerFound.name,
+              contact: borrowerFound.contact,
+              borrowerId: borrowerFound.id,
+            })
+          );
+
           renderBorrowerInfo(borrowerFound);
           await renderPaymentHistory(borrowerFound.id);
         } catch (err) {
@@ -413,54 +532,51 @@
           "badge " + (b.status === "Paid" ? "paid" : "partial");
       }
 
-function formatDate(timestamp) {
-  const d = new Date(Number(timestamp));
+      function formatDate(timestamp) {
+        const d = new Date(Number(timestamp));
 
-  return d.toLocaleString('en-PH', {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  });
-}
-      
-     async function renderPaymentHistory(borrowerId) {
-  const paymentsSnap = await get(ref(db, "lendingSystem/payments"));
-  paymentTable.innerHTML = "";
+        return d.toLocaleString("en-PH", {
+          year: "numeric",
+          month: "short",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+      }
 
-  let paymentList = [];
+      async function renderPaymentHistory(borrowerId) {
+        const paymentsSnap = await get(ref(db, "lendingSystem/payments"));
+        paymentTable.innerHTML = "";
 
-  paymentsSnap.forEach((p) => {
-    const pay = p.val();
-    if (pay.borrowerId === borrowerId) {
-      paymentList.push(pay);
-    }
-  });
+        let list = [];
 
-  if (paymentList.length === 0) {
-    paymentTable.innerHTML = `
-      <tr>
-        <td colspan="3" style="text-align:center;color:#64748b;">
-          No payment history found
-        </td>
-      </tr>
+        paymentsSnap.forEach((p) => {
+          const pay = p.val();
+          if (pay.borrowerId === borrowerId) list.push(pay);
+        });
+
+        if (list.length === 0) {
+          paymentTable.innerHTML = `
+      <div class="empty-state">No payment history found</div>
     `;
-    return;
-  }
+          return;
+        }
 
-  // 🔥 Newest payments first (same as admin)
-  paymentList.reverse().forEach((pay) => {
-    paymentTable.innerHTML += `
-      <tr>
-        <td>${formatDate(pay.date)}</td>
-        <td>${capitalize(pay.type)}</td>
-        <td>₱${Number(pay.amount).toFixed(2)}</td>
-      </tr>
+        list.reverse().forEach((pay) => {
+          paymentTable.innerHTML += `
+      <div class="payment-item">
+        <div>
+          <div class="payment-type">${capitalize(pay.type)}</div>
+          <div class="payment-date">${formatDate(pay.date)}</div>
+        </div>
+        <div class="payment-amount">
+          ₱${Number(pay.amount).toFixed(2)}
+        </div>
+      </div>
     `;
-  });
-}
+        });
+      }
 
       /* ==================== UI HELPERS ==================== */
       function setLoading(isLoading) {
@@ -481,6 +597,34 @@ function formatDate(timestamp) {
       function capitalize(str) {
         return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
       }
+
+      async function autoLoginBorrower() {
+        const saved = localStorage.getItem("borrowerLogin");
+        if (!saved) return;
+
+        const { name, contact, borrowerId } = JSON.parse(saved);
+
+        try {
+          const borrowerSnap = await get(
+            ref(db, `lendingSystem/borrowers/${borrowerId}`)
+          );
+
+          if (!borrowerSnap.exists()) {
+            localStorage.removeItem("borrowerLogin");
+            return;
+          }
+
+          const borrower = borrowerSnap.val();
+
+          renderBorrowerInfo(borrower);
+          await renderPaymentHistory(borrowerId);
+        } catch (err) {
+          console.error(err);
+          localStorage.removeItem("borrowerLogin");
+        }
+      }
+
+      autoLoginBorrower();
     </script>
   </body>
 </html>
