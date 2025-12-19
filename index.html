@@ -5,18 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Borrower Loan Portal</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
     <style>
+      /* =========================================================
+   ROOT VARIABLES
+========================================================= */
       :root {
         --primary: #2563eb;
-        --secondary: #0f172a;
-        --bg: #f1f5f9;
+        --primary-dark: #1e40af;
+        --accent: #22c55e;
+        --warning: #f59e0b;
+        --bg: #f4f6fb;
+        --card: rgba(255, 255, 255, 0.92);
+        --border: rgba(255, 255, 255, 0.35);
+        --text-dark: #0f172a;
+        --text-muted: #64748b;
       }
 
+      /* =========================================================
+   RESET & BASE
+========================================================= */
       * {
         box-sizing: border-box;
         font-family: "Inter", sans-serif;
@@ -29,78 +49,102 @@
       }
 
       body {
+        background: linear-gradient(135deg, #eef2ff, #f8fafc);
+        color: var(--text-dark);
         display: flex;
         flex-direction: column;
-        background: var(--bg);
       }
 
-      /* ===== TOOLBAR ===== */
+      /* =========================================================
+   TOOLBAR
+========================================================= */
       .toolbar {
-        height: 50px;
-        background: linear-gradient(135deg, #1e3a8a, #2563eb);
+        height: 56px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary)
+        );
         color: #fff;
         display: flex;
         align-items: center;
-        justify-content: space-between; /* 🔥 LEFT & RIGHT */
-        padding: 0 16px;
+        justify-content: space-between;
+        padding: 0 18px;
         font-size: 18px;
         font-weight: 600;
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 10;
+        inset: 0 0 auto 0;
+        z-index: 1000;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
       }
 
-      .toolbar-title {
-        font-size: 18px;
-        font-weight: 600;
+      .toolbar-actions {
+        display: flex;
+        gap: 12px;
       }
 
-      .toolbar-contact {
-        font-size: 14px;
-        font-weight: 500;
-        opacity: 0.9;
+      .icon-btn {
+        background: transparent;
+        border: none;
+        color: white;
         cursor: pointer;
+        padding: 6px;
+        transition: transform 0.2s ease, opacity 0.2s ease;
       }
 
-      /* ===== FOOTER ===== */
+      .icon-btn:hover {
+        transform: scale(1.15);
+        opacity: 0.9;
+      }
+
+      /* =========================================================
+   FOOTER
+========================================================= */
       .footer {
-        height: 35px;
-        background: linear-gradient(135deg, #1e3a8a, #2563eb);
+        height: 36px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary)
+        );
         color: #cbd5f5;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 12px;
         position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        inset: auto 0 0 0;
       }
 
-      /* ===== CONTENT ===== */
+      /* =========================================================
+   CONTENT WRAPPER
+========================================================= */
       .content {
         flex: 1;
-        margin-top: 56px;
+        margin-top: 64px;
         margin-bottom: 44px;
+        padding: 18px;
         overflow-y: auto;
-        padding: 16px;
       }
 
+      /* =========================================================
+   CARD BASE
+========================================================= */
       .card {
-        background: #fff;
-        border-radius: 18px;
-        padding: 20px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-        margin-bottom: 20px;
-        animation: fadeSlide 0.6s ease;
+        background: var(--card);
+        border-radius: 22px;
+        padding: 22px;
+        border: 1px solid var(--border);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 25px 55px rgba(0, 0, 0, 0.12);
+        margin-bottom: 22px;
+        animation: rise 0.6s ease;
       }
 
-      @keyframes fadeSlide {
+      @keyframes rise {
         from {
           opacity: 0;
-          transform: translateY(20px);
+          transform: translateY(26px);
         }
         to {
           opacity: 1;
@@ -111,107 +155,160 @@
       h2,
       h3 {
         margin: 0 0 10px;
-        color: var(--secondary);
       }
 
       .subtitle {
         font-size: 13px;
-        color: #64748b;
-        margin-bottom: 16px;
+        color: var(--text-muted);
+        margin-bottom: 18px;
+      }
+
+      /* =========================================================
+   LOGIN FORM
+========================================================= */
+      #borrowerForm {
+        max-width: 420px;
+        margin: auto;
       }
 
       input {
         width: 100%;
-        padding: 14px;
-        margin-bottom: 12px;
-        border-radius: 12px;
-        border: 1px solid #cbd5f5;
+        padding: 15px;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
         font-size: 15px;
+        margin-bottom: 14px;
+        background: #f8fafc;
       }
 
       input:focus {
         outline: none;
         border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
       }
 
+      /* =========================================================
+   BUTTONS
+========================================================= */
       button {
         width: 100%;
         padding: 14px;
-        background: var(--primary);
-        color: #fff;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
         border: none;
-        border-radius: 12px;
+        border-radius: 14px;
         font-weight: 600;
+        font-size: 15px;
         cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 34px rgba(37, 99, 235, 0.35);
       }
 
       button:disabled {
         opacity: 0.7;
       }
 
-      /* ===== DASHBOARD ===== */
+      /* =========================================================
+   DASHBOARD / FINTECH
+========================================================= */
       .dashboard {
         display: none;
       }
 
-      .stats {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-bottom: 15px;
+      .hero-card {
+        background: linear-gradient(135deg, #2563eb, #1e40af);
+        color: white;
+        border-radius: 28px;
+        padding: 26px;
+        box-shadow: 0 32px 65px rgba(37, 99, 235, 0.45);
+        animation: fadeUp 0.7s ease;
       }
 
-      .stat {
-        padding: 16px;
-        border-radius: 14px;
-        color: #fff;
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
-      .stat.primary {
-        background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      }
-
-      .stat.warning {
-        background: linear-gradient(135deg, #facc15, #f59e0b);
-        color: #78350f;
-      }
-
-      .stat span {
-        font-size: 12px;
-      }
-
-      .stat strong {
-        font-size: 20px;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        background: #fff;
-        border-radius: 12px;
-        overflow: hidden;
-      }
-
-      th,
-      td {
-        padding: 12px;
+      .hero-label {
         font-size: 13px;
-        text-align: left;
+        opacity: 0.9;
       }
 
-      th {
-        background: #f8fafc;
+      .hero-amount {
+        font-size: 38px;
+        font-weight: 700;
+        margin: 6px 0;
       }
 
-      tr:nth-child(even) {
-        background: #f9fafb;
+      .hero-sub {
+        font-size: 13px;
+        opacity: 0.85;
       }
 
+      /* =========================================================
+   KPI GRID
+========================================================= */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .kpi-card {
+        background: white;
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+      }
+
+      .kpi-card.accent {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white;
+      }
+
+      .kpi-card.full {
+        grid-column: span 2;
+      }
+
+      .kpi-label {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .kpi-value {
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .mono {
+        font-family: monospace;
+        letter-spacing: 1px;
+      }
+
+      /* =========================================================
+   BADGES
+========================================================= */
       .badge {
-        padding: 4px 10px;
+        padding: 4px 12px;
         border-radius: 999px;
         font-size: 12px;
-        font-weight: 600;
+        font-weight: 700;
+        display: inline-block;
       }
 
       .paid {
@@ -224,95 +321,14 @@
         color: #92400e;
       }
 
-      .hide {
-        display: none;
-      }
-
-      .table-scroll {
-        max-height: 260px; /* Controls visible height */
-        overflow-y: auto;
-        border-radius: 12px;
-        box-shadow: inset 0 0 0 1px #e5e7eb;
-      }
-
-      /* Smooth scrolling on mobile */
-      .table-scroll {
-        -webkit-overflow-scrolling: touch;
-      }
-
-      /* Keep header visible while scrolling */
-      .table-scroll thead th {
-        position: sticky;
-        top: 0;
-        background: #f8fafc;
-        z-index: 1;
-      }
-
-      @media (max-width: 480px) {
-        .table-scroll {
-          max-height: 200px;
-        }
-      }
-
-      /* ===== FINTECH DASHBOARD ===== */
-      .fintech {
-        display: none;
-      }
-
-      .hero-card {
-        background: linear-gradient(135deg, #2563eb, #1d4ed8);
-        color: #fff;
-        border-radius: 20px;
-        padding: 22px;
-        margin-bottom: 18px;
-      }
-
-      .hero-label {
-        font-size: 13px;
-        opacity: 0.9;
-      }
-
-      .hero-amount {
-        font-size: 34px;
-        font-weight: 700;
-        margin: 6px 0;
-      }
-
-      .hero-sub {
-        font-size: 13px;
-        opacity: 0.85;
-      }
-
-      .kpi-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-bottom: 16px;
-      }
-
-      .kpi-card {
-        background: #fff;
-        border-radius: 14px;
-        padding: 14px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-      }
-
-      .kpi-label {
-        font-size: 12px;
-        color: #64748b;
-      }
-
-      .kpi-value {
-        font-size: 15px;
-        font-weight: 600;
-      }
-
+      /* =========================================================
+   PROFILE CARD
+========================================================= */
       .profile-card {
-        background: #fff;
-        border-radius: 14px;
-        padding: 14px;
-        margin-bottom: 16px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        background: white;
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
       }
 
       .profile-row {
@@ -321,11 +337,14 @@
         font-size: 14px;
       }
 
+      /* =========================================================
+   PAYMENT HISTORY
+========================================================= */
       .history-card {
-        background: #fff;
-        border-radius: 14px;
-        padding: 16px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        background: white;
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
       }
 
       .payment-list {
@@ -335,12 +354,24 @@
       .payment-item {
         display: flex;
         justify-content: space-between;
-        padding: 12px 0;
+        padding: 14px 0;
         border-bottom: 1px solid #e5e7eb;
+        animation: slideIn 0.4s ease;
       }
 
       .payment-item:last-child {
         border-bottom: none;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
 
       .payment-type {
@@ -349,19 +380,253 @@
 
       .payment-date {
         font-size: 12px;
-        color: #64748b;
+        color: var(--text-muted);
       }
 
       .payment-amount {
         font-weight: 700;
-        color: #2563eb;
+        font-size: 16px;
+        color: var(--primary);
       }
 
+      /* =========================================================
+   EMPTY STATE
+========================================================= */
       .empty-state {
         text-align: center;
-        color: #64748b;
+        color: var(--text-muted);
         font-size: 14px;
         padding: 20px;
+      }
+
+      /* =========================================================
+   HELPERS
+========================================================= */
+      .hide {
+        display: none;
+      }
+
+      /* =========================================================
+   RESPONSIVE
+========================================================= */
+      @media (max-width: 480px) {
+        .hero-amount {
+          font-size: 30px;
+        }
+
+        .kpi-card.full {
+          grid-column: span 1;
+        }
+
+        .toolbar {
+          font-size: 16px;
+        }
+      }
+
+      /* =========================================================
+   LOGIN FORM FIX (LAYOUT + UX)
+========================================================= */
+      .login-card {
+        max-width: 420px;
+        margin: 40px auto;
+        text-align: center;
+      }
+
+      .login-header {
+        margin-bottom: 24px;
+      }
+
+      .login-icon {
+        font-size: 42px;
+        color: var(--primary);
+        background: rgba(37, 99, 235, 0.1);
+        padding: 14px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+      }
+
+      .form-group {
+        text-align: left;
+        margin-bottom: 16px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--text-dark);
+      }
+
+      .primary-btn {
+        margin-top: 10px;
+      }
+
+      /* =========================================================
+   SMOOTH LOGIN → DASHBOARD TRANSITION
+========================================================= */
+      .fade-in {
+        animation: fadeScale 0.5s ease forwards;
+      }
+
+      @keyframes fadeScale {
+        from {
+          opacity: 0;
+          transform: scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* =========================================================
+   FINTECH INFO CARD (2-COLUMN ALWAYS)
+========================================================= */
+      .fintech-card {
+        background: white;
+        border-radius: 20px;
+        padding: 18px;
+        margin-bottom: 26px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+      }
+
+      .fintech-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .fintech-item.span-2 {
+        grid-column: span 2;
+      }
+
+      .fintech-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+      }
+
+      .fintech-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-dark);
+      }
+
+      /* =========================================================
+   COMBINED FINTECH DASHBOARD CARD
+========================================================= */
+.dashboard-card {
+  background: white;
+  border-radius: 26px;
+  overflow: hidden;
+  margin-bottom: 28px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+}
+
+/* HERO SECTION */
+.dashboard-hero {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  padding: 26px;
+}
+
+.dashboard-hero .hero-label {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.dashboard-hero .hero-amount {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 6px 0;
+}
+
+.dashboard-hero .hero-sub {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+/* INFO GRID */
+.dashboard-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px 16px;
+  padding: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-item.align-right {
+  text-align: right;
+}
+
+.info-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* Badge alignment */
+.info-item .badge {
+  width: fit-content;
+  align-self: flex-end;
+}
+
+/* Keep 2 columns on mobile */
+@media (max-width: 480px) {
+  .dashboard-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .info-item.align-right {
+    text-align: left;
+  }
+}
+
+
+      /* =========================================================
+   DASHBOARD SPACING FIX
+========================================================= */
+      #result.fintech {
+        max-width: 980px;
+        margin: auto;
+      }
+
+      /* =========================================================
+   MOBILE FIXES
+========================================================= */
+      @media (max-width: 480px) {
+        .login-card {
+          margin: 20px 8px;
+        }
+
+        .login-icon {
+          font-size: 36px;
+        }
+      }
+
+      .hero-card {
+        margin-bottom: 24px;
+      }
+
+      .kpi-grid {
+        margin-bottom: 22px;
+      }
+
+      .profile-card {
+        margin-bottom: 26px;
       }
     </style>
   </head>
@@ -369,61 +634,89 @@
   <body>
     <header class="toolbar">
       <span class="toolbar-title">Borrower Portal</span>
-      <span class="toolbar-contact">Admin #: +639924674726</span>
+
+      <div class="toolbar-actions hide" id="toolbarActions">
+        <button id="refreshBtn" class="icon-btn" title="Refresh">
+          <span class="material-icons">refresh</span>
+        </button>
+
+        <button id="logoutBtn" class="icon-btn" title="Logout">
+          <span class="material-icons">logout</span>
+        </button>
+      </div>
     </header>
 
     <main class="content">
       <!-- LOGIN -->
-      <section id="borrowerForm" class="card">
-        <h2>Check Loan Details</h2>
-        <p class="subtitle">Secure • Read-only access</p>
+      <section id="borrowerForm" class="card login-card">
+        <div class="login-header">
+          <span class="material-icons login-icon">lock</span>
+          <h2>Borrower Access</h2>
+        </div>
 
-        <input type="text" id="nameInput" placeholder="Full Name" />
-        <input type="text" id="contactInput" placeholder="Mobile Number" />
-        <button id="checkLoan">Check Loan</button>
+        <div class="form-group">
+          <label>Loan ID</label>
+          <input type="text" id="loanIdInput" placeholder="LN-2025-00012" />
+        </div>
+
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input type="text" id="contactInput" placeholder="09XXXXXXXXX" />
+        </div>
+
+        <button id="checkLoan" class="primary-btn">Access My Loan</button>
       </section>
 
       <!-- DASHBOARD -->
       <section id="result" class="dashboard fintech">
-        <!-- HERO BALANCE CARD -->
-        <div class="hero-card">
-          <div class="hero-label">Outstanding Balance</div>
-          <div class="hero-amount">₱<span id="rBalance"></span></div>
-          <div class="hero-sub">
-            Loan Amount: ₱<span id="rLoanAmount"></span>
-          </div>
-        </div>
+  <div class="dashboard-card">
+    <!-- BALANCE HEADER -->
+    <div class="dashboard-hero">
+      <span class="hero-label">Outstanding Balance</span>
+      <div class="hero-amount">₱<span id="rBalance"></span></div>
+      <span class="hero-sub">
+        Loan Amount: ₱<span id="rLoanAmount"></span>
+      </span>
+    </div>
 
-        <!-- KPI CARDS -->
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <span class="kpi-label">Status</span>
-            <span id="rStatus" class="badge"></span>
-          </div>
+    <!-- INFO GRID -->
+    <div class="dashboard-info">
+      <!-- Borrower -->
+      <div class="info-item">
+        <span class="info-label">Borrower</span>
+        <span class="info-value" id="rName"></span>
+      </div>
 
-          <div class="kpi-card">
-            <span class="kpi-label">Borrower</span>
-            <span class="kpi-value" id="rName"></span>
-          </div>
-        </div>
+      <!-- Status -->
+      <div class="info-item align-right">
+        <span class="info-label">Status</span>
+        <span id="rStatus" class="badge"></span>
+      </div>
 
-        <!-- PROFILE CARD -->
-        <div class="profile-card">
-          <div class="profile-row">
-            <span>Mobile</span>
-            <strong id="rContact"></strong>
-          </div>
-        </div>
+      <!-- Loan ID -->
+      <div class="info-item">
+        <span class="info-label">Loan ID</span>
+        <span class="info-value mono" id="rLoanId"></span>
+      </div>
 
-        <!-- PAYMENT HISTORY -->
-        <div class="history-card">
-          <h3>Payment History</h3>
-          <div id="paymentTable" class="payment-list"></div>
-        </div>
-      </section>
-    </main>
+      <!-- Mobile -->
+      <div class="info-item align-right">
+        <span class="info-label">Mobile</span>
+        <span class="info-value" id="rContact"></span>
+      </div>
+    </div>
+  </div>
 
-    <footer class="footer">© 2025 Lending Management System</footer>
+  <!-- PAYMENT HISTORY -->
+  <div class="history-card">
+    <h3>Payment History</h3>
+    <div id="paymentTable" class="payment-list"></div>
+  </div>
+</section>
+
+    <footer class="footer">
+      Admin #: +639924674726 | Email: jmgc.care@gmail.com
+    </footer>
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -450,7 +743,7 @@
 
       /* ==================== DOM ELEMENTS ==================== */
       const checkBtn = document.getElementById("checkLoan");
-      const nameInput = document.getElementById("nameInput");
+      const loanIdInput = document.getElementById("loanIdInput");
       const contactInput = document.getElementById("contactInput");
       const resultBox = document.getElementById("result");
 
@@ -460,19 +753,20 @@
       const rBalance = document.getElementById("rBalance");
       const rStatus = document.getElementById("rStatus");
       const paymentTable = document.getElementById("paymentTable");
-
       const borrowerForm = document.getElementById("borrowerForm");
+      const toolbarActions = document.getElementById("toolbarActions");
+      const rLoanId = document.getElementById("rLoanId");
 
       /* ==================== EVENT ==================== */
       checkBtn.addEventListener("click", fetchBorrowerLoan);
 
       /* ==================== MAIN FUNCTION ==================== */
       async function fetchBorrowerLoan() {
-        const name = nameInput.value.trim().toLowerCase();
+        const loanId = loanIdInput.value.trim().toUpperCase();
         const contact = contactInput.value.trim();
 
-        if (!name || !contact) {
-          showMessage("Please enter your full name and mobile number.");
+        if (!loanId || !contact) {
+          showMessage("Please enter your Loan ID and mobile number.");
           return;
         }
 
@@ -484,7 +778,7 @@
 
           borrowersSnap.forEach((child) => {
             const b = child.val();
-            if (b.name?.toLowerCase() === name && b.contact === contact) {
+            if (b.loanId?.toUpperCase() === loanId && b.contact === contact) {
               borrowerFound = { id: child.key, ...b };
             }
           });
@@ -499,7 +793,7 @@
           localStorage.setItem(
             "borrowerLogin",
             JSON.stringify({
-              name: borrowerFound.name,
+              loanId: borrowerFound.loanId,
               contact: borrowerFound.contact,
               borrowerId: borrowerFound.id,
             })
@@ -517,11 +811,15 @@
 
       /* ==================== RENDER FUNCTIONS ==================== */
       function renderBorrowerInfo(b) {
-        borrowerForm.classList.add("hide"); // 🔥 Hide input
-        resultBox.style.display = "block"; // 🔥 Show dashboard
+        toolbarActions.classList.remove("hide");
+
+        borrowerForm.classList.add("hide");
+        resultBox.style.display = "block";
+        resultBox.classList.add("fade-in");
 
         rName.textContent = b.name;
         rContact.textContent = b.contact;
+        rLoanId.textContent = b.loanId; // ✅ FIX
         rLoanAmount.textContent = Number(b.amount).toFixed(2);
 
         const balance = (b.outstanding - b.partial).toFixed(2);
@@ -581,7 +879,7 @@
       /* ==================== UI HELPERS ==================== */
       function setLoading(isLoading) {
         checkBtn.disabled = isLoading;
-        checkBtn.textContent = isLoading ? "Checking..." : "Check Loan Details";
+        checkBtn.textContent = isLoading ? "Checking..." : "Access My Loan";
       }
 
       function showMessage(msg) {
@@ -602,7 +900,7 @@
         const saved = localStorage.getItem("borrowerLogin");
         if (!saved) return;
 
-        const { name, contact, borrowerId } = JSON.parse(saved);
+        const { borrowerId } = JSON.parse(saved);
 
         try {
           const borrowerSnap = await get(
@@ -615,7 +913,6 @@
           }
 
           const borrower = borrowerSnap.val();
-
           renderBorrowerInfo(borrower);
           await renderPaymentHistory(borrowerId);
         } catch (err) {
@@ -623,6 +920,58 @@
           localStorage.removeItem("borrowerLogin");
         }
       }
+
+      /* ==================== TOOLBAR ACTIONS ==================== */
+      const logoutBtn = document.getElementById("logoutBtn");
+      const refreshBtn = document.getElementById("refreshBtn");
+
+      logoutBtn.addEventListener("click", () => {
+        if (!confirm("Logout and return to login?")) return;
+
+        localStorage.removeItem("borrowerLogin");
+
+        toolbarActions.classList.add("hide"); // 🔒 hide icons
+
+        borrowerForm.classList.remove("hide");
+        resultBox.style.display = "none";
+        loanIdInput.value = "";
+        contactInput.value = "";
+        paymentTable.innerHTML = "";
+      });
+
+      refreshBtn.addEventListener("click", async () => {
+        const saved = localStorage.getItem("borrowerLogin");
+
+        if (!saved) {
+          location.reload();
+          return;
+        }
+
+        const { borrowerId } = JSON.parse(saved);
+
+        try {
+          setLoading(true);
+          const snap = await get(
+            ref(db, `lendingSystem/borrowers/${borrowerId}`)
+          );
+
+          if (!snap.exists()) {
+            alert("Session expired. Please login again.");
+            localStorage.removeItem("borrowerLogin");
+            location.reload();
+            return;
+          }
+
+          const borrower = snap.val();
+          renderBorrowerInfo(borrower);
+          await renderPaymentHistory(borrowerId);
+        } catch (err) {
+          console.error(err);
+          alert("Failed to refresh data.");
+        } finally {
+          setLoading(false);
+        }
+      });
 
       autoLoginBorrower();
     </script>
